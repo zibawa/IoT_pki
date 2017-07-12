@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<h2>You are about to create a new Certificate Authority!</h2>
+<p>When you submit the form below, all future certificate renewal requests will be signed 
+by the new certificate authority.  The new authority certificate must be added to the web server proxy (NGINX that is serving the PKI), together with any prior versions</p>
+See the documentation for help.  Failure to do this correctly will stop correct validation of some or all of your client requests.
+
+<form action="#" method="post">
+    {% csrf_token %}
+    
+    <table>{{ form.as_table }}</table>
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

@@ -1,7 +1,7 @@
 # IoT_pki
 Public Key Infrastructure for IoT devices built in python django
 
-#Functionality
+# Functionality
 API interface allows clients to:
 
 Request new X509 certificates (subject to approval)

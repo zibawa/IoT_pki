@@ -12,3 +12,8 @@ Admin interface allows administrators to:
 
 View and approve X509 certificate requests
 View and revoke existing X509 certificates
+
+# Documentation
+
+https://docs.zibawa.com/doku.php?id=pki:start
+

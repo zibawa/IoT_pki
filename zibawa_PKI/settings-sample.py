@@ -145,7 +145,7 @@ PKI={'host':'secret.myserver.com','port':443,
      'path_to_ca_key':'/path/to/ca.key',
      'path_to_certstore':'/home/myCA/certs/',#requires trailing slash, place to keep CA certs
      'path_to_keystore':'/home/myCA/private/',#requires trailing slash. place to keep ca keys should be permission 400
-     
+     'auto_approve_requests':False,#should be FALSE (true will automatically approve all requests)
      }
 
 CERT_DEFAULTS={'country_name':"ES",#obligatory must be 2 letter country code 

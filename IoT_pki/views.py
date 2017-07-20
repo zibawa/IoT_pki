@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.forms import modelformset_factory
 from django.http import HttpResponse,HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import user_passes_test
 from .x509_functions import generateNewX509,id_generator,makeCert,prepareCert,build_crl
 from django.contrib.auth.models import User, Group
 from .models import Cert_request,Certificate
@@ -20,7 +21,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 import datetime
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly,Anonymous
 import logging
 import OpenSSL
 
@@ -35,8 +36,9 @@ class New_request(generics.CreateAPIView):
     
     model=Cert_request
     serializer_class=Cert_requestSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
     
+    #don't forget to leave comma at end of permission_classes!
+    permission_classes = (permissions.AllowAny,)
     
     def perform_create(self, serializer):
         #here we could add other info such as IP address 
@@ -51,8 +53,9 @@ class New_request(generics.CreateAPIView):
         if queryset.exists():
             
             raise serializers.ValidationError('Valid certificate already issued')
-        #generate random token to be returned to user to enable certificate collection   
-        serializer.save(token=id_generator())
+        #generate random token to be returned to user to enable certificate collection 
+          
+        serializer.save(token=id_generator(),approved=settings.PKI['auto_approve_requests'])
         
 
 
@@ -64,7 +67,8 @@ def cert_collect(request,token):
     try:
         cert_request=certs[0]
     except:
-        response= HttpResponse(status=404,content="Not found")    
+        return HttpResponse(status=404,content="Bad token")    
+    
     logger.info("retrieved cert %s",cert_request.common_name)
     
     if (cert_request.issued==True):
@@ -135,12 +139,15 @@ def cert_collect_pkcs12(request,token):
 
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def new_ca(request):
-
+#this sets up new CA which will be used in all future signing requests
 
     if request.method == 'POST':
         form = Ca_Form(request.POST)
+        
         if form.is_valid():
+            logger.debug("form is valid")
             ca_cert_request=form.save()
             ca_cert_request.is_ca=True
             new_ca_data=prepareCert(ca_cert_request)
@@ -149,7 +156,9 @@ def new_ca(request):
             response['Content-Disposition'] = 'attachment; filename="client_cert.pem"'
             new_ca_data.issued=True
             new_ca_data.save()
-        
+        else:
+            logger.debug("form not valid")
+            return render(request, 'IoT_pki/new_ca.html', {'form': form})
         return response
             
             
@@ -168,7 +177,7 @@ def download_ca(request):
         file.seek(0)
         cert = file.read()
         file.close()
-        response = HttpResponse(cert, content_type='application/x-pem-file',status=201)
+        response = HttpResponse(cert, content_type='application/x-pem-file',status=200)
         response['Content-Disposition'] = 'attachment; filename="ca_cert.pem"'
     
     except:
@@ -259,7 +268,7 @@ def check_renewal_status(hex_serial_number):
 
 
 def export_crl(request):
-    
+    logger.debug("view export crl")
     #try:
     if 1==1:
         datastream= build_crl()
@@ -271,10 +280,6 @@ def export_crl(request):
     '''
     
     return response 
-    
-    
-    
-    
     
 
     

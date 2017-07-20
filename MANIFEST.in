@@ -1,0 +1,5 @@
+include LICENSE
+include README.md
+recursive-include IoT_pki/static *
+recursive-include IoT_pki/templates *
+recursive-include docs *

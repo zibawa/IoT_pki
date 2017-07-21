@@ -9,11 +9,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django_IoT_pki',
-    version='1.2',
+    version='1.3',
     packages=find_packages(),
     include_package_data=True,
-    license='BSD License',  # example license
-    description='A simple Django app to conduct Web-based polls.',
+    license='GNU license',  # example license
+    description='A simple public key infrastructure to allow issuing and automatic renewal of X509 certificates',
     long_description=README,
     url='https://www.zibawa.com/',
     author='Matt Field',
@@ -23,7 +23,7 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 1.11',  # replace "X.Y" as appropriate
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU License',  # example license
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         # Replace these appropriately if you are stuck on Python 2.
@@ -32,5 +32,16 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Security :: Cryptography',
     ],
+    install_requires=[
+        'cryptography',
+        'djangorestframework',
+        'markdown',
+        'pyOpenSSL',
+        'coreapi',
+        
+        
+        
+        ],  
 )

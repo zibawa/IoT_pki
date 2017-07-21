@@ -3,7 +3,7 @@ from django.forms import modelformset_factory
 from django.http import HttpResponse,HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
-from .x509_functions import generateNewX509,id_generator,makeCert,prepareCert,build_crl
+from .x509_functions import generateNewX509,id_generator,makeCert,prepareCert,build_crl,certStorePath,get_newest_ca
 from django.contrib.auth.models import User, Group
 from .models import Cert_request,Certificate
 from .forms import Ca_Form
@@ -173,7 +173,7 @@ def download_ca(request):
     #download public key for CA.         
     
     try:
-        file = open(settings.PKI['path_to_ca_cert'], 'r')
+        file = open(certStorePath(get_newest_ca().issuer_serial_number), 'r')
         file.seek(0)
         cert = file.read()
         file.close()
@@ -181,7 +181,7 @@ def download_ca(request):
         response['Content-Disposition'] = 'attachment; filename="ca_cert.pem"'
     
     except:
-        response= HttpResponse(status=404, content= 'Not found')
+        response= HttpResponse(status=404, content= 'Not found you must create a CA first')
     
     
     return response 

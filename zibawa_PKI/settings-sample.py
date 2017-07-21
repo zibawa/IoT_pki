@@ -142,8 +142,6 @@ PKI={'host':'secret.myserver.com','port':443,
      
      'use_ssl':True,#should always be True except for testing
      'verify_certs':False,#verify identity of server should be True except for testing
-     'path_to_ca_cert':'/path/to/ca.pem',
-     'path_to_ca_key':'/path/to/ca.key',
      'path_to_certstore':'/home/myCA/certs/',#requires trailing slash, place to keep CA certs
      'path_to_keystore':'/home/myCA/private/',#requires trailing slash. place to keep ca keys should be permission 400
      'auto_approve_requests':False,#should be FALSE (true will automatically approve all requests)

@@ -234,13 +234,22 @@ def build_crl():
             ).build(default_backend())
     
     revoked_list=Certificate.objects.filter(issuer_serial_number=ca.serial_number,revoked=True)
-    for revoked_cert in revoked_list:
-        revoked_cert = x509.RevokedCertificateBuilder().serial_number(
-                 444
+    revoked_cert = x509.RevokedCertificateBuilder().serial_number(444
                  ).revocation_date(
                      datetime.datetime.today()
                      ).build(default_backend())
-        
+    
+    for revoked_cert in revoked_list:
+        logger.debug("ca.serial_number: %s",revoked_cert.serial_number)
+        revoked_cert = x509.RevokedCertificateBuilder().serial_number(int(revoked_cert.serial_number)
+                 ).revocation_date(
+                     datetime.datetime.today()
+                     ).build(default_backend())
+        builder = builder.add_revoked_certificate(revoked_cert)
+    revoked_cert = x509.RevokedCertificateBuilder().serial_number(222
+                 ).revocation_date(
+                     datetime.datetime.today()
+                     ).build(default_backend())    
     crl = builder.sign(
             private_key=loadPEMKey(keyStorePath(ca.serial_number)), algorithm=hashes.SHA256(),
             backend=default_backend()

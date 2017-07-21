@@ -52,7 +52,7 @@ django-admin startproject mytestpki
 ```
 
 
-##Create directory for logs (optional)
+## Create directory for logs (optional)
 
 ```
 sudo mkdir /var/log/zibawa
@@ -62,13 +62,13 @@ sudo chown -R zibawa:zibawa /var/log/zibawa
 
 
 
-##Create Super User
+## Create Super User
 
 ```
 python manage.py createsuperuser
 ```
 
-##settings.py
+## settings.py
 
 
 
@@ -131,7 +131,7 @@ REST_FRAMEWORK = {
 
 
 
-===== urls.py =====
+## urls.py
 
 If you are installing IoT_pki as a stand alone from github, the below is not necessary, since you will install urls.py as part of the github package.  However, if you are adding to an existing django project, you will need to include the following:
 
@@ -163,14 +163,14 @@ urlpatterns = [
 ```
 
 
-#Perform Database Migration
+## Perform Database Migration
 Move into your project directory that should have been created just below where you are.
 
 cd mytestpki
 python manage.py migrate
 
 
-#Start the development server
+## Start the development server
 
 
 python manage.py runserver

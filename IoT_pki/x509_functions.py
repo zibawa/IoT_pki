@@ -216,40 +216,25 @@ def build_crl():
 #import datetime
     ca=get_newest_ca()
     one_day = datetime.timedelta(1, 0, 0)
-    private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,
-        backend=default_backend()
-        )
+    
     builder = x509.CertificateRevocationListBuilder()
     builder = builder.issuer_name(x509.Name([
         x509.NameAttribute(NameOID.COMMON_NAME,ca.common_name),
         ]))
     builder = builder.last_update(datetime.datetime.today())
     builder = builder.next_update(datetime.datetime.today() + one_day)
-    revoked_cert = x509.RevokedCertificateBuilder().serial_number(
-        333
-        ).revocation_date(
-            datetime.datetime.today()
-            ).build(default_backend())
-    
+     
     revoked_list=Certificate.objects.filter(issuer_serial_number=ca.serial_number,revoked=True)
-    revoked_cert = x509.RevokedCertificateBuilder().serial_number(444
-                 ).revocation_date(
-                     datetime.datetime.today()
-                     ).build(default_backend())
+   
     
     for revoked_cert in revoked_list:
-        logger.debug("ca.serial_number: %s",revoked_cert.serial_number)
+        logger.debug("revoked serial_number: %s",revoked_cert.serial_number)
         revoked_cert = x509.RevokedCertificateBuilder().serial_number(int(revoked_cert.serial_number)
                  ).revocation_date(
                      datetime.datetime.today()
                      ).build(default_backend())
         builder = builder.add_revoked_certificate(revoked_cert)
-    revoked_cert = x509.RevokedCertificateBuilder().serial_number(222
-                 ).revocation_date(
-                     datetime.datetime.today()
-                     ).build(default_backend())    
+      
     crl = builder.sign(
             private_key=loadPEMKey(keyStorePath(ca.serial_number)), algorithm=hashes.SHA256(),
             backend=default_backend()

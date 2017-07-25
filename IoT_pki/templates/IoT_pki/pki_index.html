@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+
+
+
+
+<h3>This is the IoT_pki for Zibawa.  </h3>  
+<h4>Documentation</h4>
+<p><a href="http://docs.zibawa.com">Full PKI documentation</a></p>
+<h4>For logged in admin super users</h4>
+<p><a href="{% url 'IoT_pki:new_ca' %}">Create Certificate Authority</a></p>
+<p><a href="{% url 'admin:index' %}">General Admin functions (approve, revoke, consult)</a></p>
+<h4>For all users</h4>
+<p><a href="{% url 'IoT_pki:download_ca' %}">Download Certificate Authority public key</a></p>
+<p><a href="{% url 'IoT_pki:export_crl' %}">Download Certificate Revocation list</a></p>
+<p><a href="{% url 'IoT_pki:new_request' %}">New Request</a></p>
+<p>/collect_cert/{token}/ - Download Certificate and key using token provided from New Request PEM format</p>
+<p><a href="{% url 'IoT_pki:test_client_cert' %}">Test Client Certificate</a></p>
+<p><a href="{% url 'IoT_pki:renew_cert' %}">Renew Certificate</a></p>
+
+{% endblock %}

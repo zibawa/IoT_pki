@@ -8,14 +8,10 @@ logger = logging.getLogger(__name__)
 # Create your tests here.
 
 
-class CAdownloadTest(TestCase):            
+ 
     
     
-    def test_download_CA_cert(self):    
-       
-        logger.info('tests: download_CA_cert')
-        response=self.client.get('/IoT_pki/download_ca/')
-        self.assertEqual(response.status_code, 200)
+    
         
 
 class CreateCATestCase(TestCase):
@@ -38,8 +34,16 @@ class TestAdmin(TestCase):
     def setUp(self):
         loginAsSuperUser(self)
           
-    def test_create_ca_as_admin(self):
-        create_ca_as_admin(self)    
+
+        
+    def test_create_and_download_CA_cert(self):    
+        create_ca_as_admin(self)  
+        logger.info('tests: download_CA_cert')
+        response=self.client.get('/IoT_pki/download_ca/')
+        self.assertEqual(response.status_code, 200)
+        
+    
+                  
         
 def loginAsSuperUser(self):
         #login as super user
@@ -129,8 +133,5 @@ class RequestAndCollecctPkcs12TestCase(TestCase):
         self.assertEqual(response.status_code,201)
 
 
-            
-
-    
-        
+  
         

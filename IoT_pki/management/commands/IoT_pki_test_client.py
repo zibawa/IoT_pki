@@ -39,7 +39,7 @@ def setup():
         verify_certs=True
         
         global host_name
-        host_name= "docs.zibawa.com"
+        host_name= "app.zibawa.com"
         
         global port
         port=443

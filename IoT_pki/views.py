@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.forms import modelformset_factory
 from django.http import HttpResponse,HttpResponseNotFound
+from django.template.response import TemplateResponse
+from django.template import loader, RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
 from .x509_functions import generateNewX509,id_generator,makeCert,prepareCert,build_crl,certStorePath,get_newest_ca
@@ -216,9 +218,12 @@ def renew_cert(request):
     #if nginx verify is OK, not revoked, and serial number on database
     #returns appropriate http response
    
-        
-    client_verify=request.META['HTTP_X_SSL_AUTHENTICATED']
-    logger.info ("client verified %s",client_verify)
+    try:    
+        client_verify=request.META['HTTP_X_SSL_AUTHENTICATED']
+        logger.info ("client verified %s",client_verify)
+    except:
+        return HttpResponse (status=501,content="Didn't receive any ssl authenticated header from web server.  You must use https.  If you did, and the error persists, possible bad configuration of webserver")
+    
     if (request.META['HTTP_X_SSL_AUTHENTICATED'])=="SUCCESS":
         user_dn=request.META['HTTP_X_SSL_USER_DN']
         logger.info("user_dn:%s",user_dn)
@@ -283,8 +288,17 @@ def export_crl(request):
     
 
     
-    
+ 
 def index(request):
-    return HttpResponse("Zibawa PKI - for documentation and instructions for use go to http://docs.zibawa.com")
-
-
+    template = loader.get_template('IoT_pki/pki_index.html')
+    
+    context = {
+         'content':"",
+         'has_permission':request.user.is_authenticated,
+         'is_popup':False,
+         'title':'IoT_pki',
+         'site_title':'zibawa',
+         
+         
+    }
+    return HttpResponse(template.render(context, request))

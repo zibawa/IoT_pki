@@ -5,7 +5,7 @@ chardet==3.0.4
 coreapi==2.3.1
 coreschema==0.0.4
 cryptography==1.9
-Django==1.11.3
+Django==1.11.28
 django-filter==1.0.4
 djangorestframework==3.6.3
 idna==2.5
